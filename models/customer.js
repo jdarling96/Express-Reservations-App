@@ -86,6 +86,21 @@ class Customer {
     return new Customer(customer);
   }
 
+  static async bestCustomers() {
+    const results = await db.query(
+      `SELECT c.id,c.first_name AS "firstName",c.last_name AS "lastName",c.phone,c.notes,COUNT(customer_id) 
+      AS numberofres
+      FROM reservations
+      JOIN customers AS c ON customer_id=c.id
+      GROUP BY c.id, c.first_name, c.last_name, customer_id
+      ORDER BY COUNT(customer_id) DESC LIMIT 10
+      
+       `
+    )
+    console.log(results.rows) 
+    return results.rows.map((c) => new Customer(c));
+  }
+
   /** get all reservations for this customer. */
 
   async getReservations() {

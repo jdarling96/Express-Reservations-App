@@ -116,7 +116,7 @@ router.post("/:id/add-reservation/", async function(req, res, next) {
   }
 });
 
-router.post('/search/', async function(req,res,next) {
+router.post('/customers/search/', async function(req,res,next) {
   try {
     const customer = await Customer.search(req.body.name)
     const {id} = customer
@@ -124,6 +124,19 @@ router.post('/search/', async function(req,res,next) {
     return res.redirect(`/${id}/`)
 
     
+  } catch (e) {
+    return next(e)
+    
+  }
+})
+
+router.get('/customers/top/', async function(req, res, next) {
+  try {
+   const customers = await Customer.bestCustomers()
+   for(c of customers) c.fullName()
+    
+    
+    return res.render("customer_list.html", { customers })
   } catch (e) {
     return next(e)
     
