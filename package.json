@@ -1,12 +1,12 @@
 {
   "name": "lunchly",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "author": "",
+  "author": "jdarling96",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -14,5 +14,14 @@
     "moment": "^2.22.2",
     "nunjucks": "^3.1.3",
     "pg": "^8.3.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdarling96/Express-Reservations-App.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jdarling96/Express-Reservations-App/issues"
+  },
+  "homepage": "https://github.com/jdarling96/Express-Reservations-App#readme",
+  "description": ""
 }

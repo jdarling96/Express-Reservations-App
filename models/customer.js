@@ -8,6 +8,7 @@ const Reservation = require("./reservation");
 class Customer {
   constructor({ id, firstName, lastName, phone, notes }) {
     this.id = id;
+    this.fullName;
     this.firstName = firstName;
     this.lastName = lastName;
     this.phone = phone;
@@ -26,7 +27,7 @@ class Customer {
        FROM customers
        ORDER BY last_name, first_name`
     );
-    return results.rows.map(c => new Customer(c));
+    return results.rows.map((c) => new Customer(c));
   }
 
   /** get a customer by ID. */
@@ -46,6 +47,38 @@ class Customer {
 
     if (customer === undefined) {
       const err = new Error(`No such customer: ${id}`);
+      err.status = 404;
+      throw err;
+    }
+
+    return new Customer(customer);
+  }
+
+  static async search(name) {
+    if (!name.includes(" ")) {
+      const err = new Error(`Couldnt find: ${name}`);
+      err.status = 404;
+      throw err;
+    }
+
+    const fullName = name.split(" ");
+
+    fullName[0] = fullName[0].charAt(0).toUpperCase() + fullName[0].slice(1);
+    fullName[1] = fullName[1].charAt(0).toUpperCase() + fullName[1].slice(1);
+
+    const result = await db.query(
+      `SELECT id,
+      first_name AS "firstName",  
+      last_name AS "lastName" 
+       FROM customers
+       WHERE first_name LIKE $1 AND
+       last_name LIKE $2`,
+      [fullName[0], fullName[1]]
+    );
+
+    const customer = result.rows[0];
+    if (customer === undefined) {
+      const err = new Error(`Couldnt find: ${name}`);
       err.status = 404;
       throw err;
     }
@@ -77,6 +110,10 @@ class Customer {
         [this.firstName, this.lastName, this.phone, this.notes, this.id]
       );
     }
+  }
+
+  fullName() {
+    this.fullName = this.firstName.concat(" ", this.lastName);
   }
 }
 
